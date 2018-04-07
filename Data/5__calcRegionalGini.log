@@ -1,0 +1,492 @@
+
+running /Users/dstegmue/Library/Application Support/Stata/ado/personal/profile.
+> do ...
+ 
+To start PanelWhiz: Stata | User | PanelWhiz | Start 
+ 
+unrecognized command:  window
+r(199);
+
+
+. /* 
+> Step 5 of 6
+> Calculate gini with bootstrapped SEs */
+. /* cf. Karagiannis, E., & Kovacevic, M. (2000). 
+> A Method to Calculate the Jackknife Variance Estimator 
+> for the Gini Coefficient. 
+> Oxford Bulletin of Economics and Statistics, 62(1), 119–122. 
+> */
+. 
+. 
+. 
+. * Read imputed data sets and average over imputations
+. forvalues i = 1/5{
+  2.     use "data_imp`i'.dta", clear
+  3.     keep region income_ppp2005 cntryn weight
+  4.     gen rownum = _n
+  5.     save _temp`i', replace
+  6. }
+(Written by R.              )
+(note: file _temp1.dta not found)
+file _temp1.dta saved
+(Written by R.              )
+(note: file _temp2.dta not found)
+file _temp2.dta saved
+(Written by R.              )
+(note: file _temp3.dta not found)
+file _temp3.dta saved
+(Written by R.              )
+(note: file _temp4.dta not found)
+file _temp4.dta saved
+(Written by R.              )
+(note: file _temp5.dta not found)
+file _temp5.dta saved
+
+. use _temp1,clear
+(Written by R.              )
+
+. append using _temp2 _temp3 _temp4 _temp5
+
+. 
+. collapse income_ppp2005 weight region cntryn, by(rownum)
+
+. bys region: gen RginiN = _N
+
+. 
+. 
+. * set up variables
+. gen Rgini = .
+(96682 missing values generated)
+
+. gen RginiSE = .
+(96682 missing values generated)
+
+. 
+. * Calc Gini by Region
+. levels region, local(levels)
+11 12 13 14 15 16 17 18 19 21 22 23 31 32 33 35 36 37 41 42 43 44 45 46 47 48 4
+> 9 51 52 53 54 55 56 57 58 59 71 72 73 74 81 82 83 84 85 86 87 88 89 91 92 93 
+> 94 95 96 97 98 99 101 102 103 104 105 106 107 108 121 122 123 124 125 126 127
+>  131 132 133 134 135 141 142 143 144 145 146 147 148 410 411 412 413 414 415 
+> 416 510 511 512 513 514 515 611 612 613 621 622 623 624 630 641 642 643 651 6
+> 52 661 662 910 911 912 1111 1112 1113 1121 1122 1123 1131 1132 1133 1134 1141
+>  1142
+
+. foreach v of local levels{
+  2.   dis "------ `v' -------"
+  3.   qui: fastgini income_ppp2005 [w=weight] if region==`v', jk
+  4.   replace Rgini = `r(gini)' if region==`v'
+  5.   replace RginiSE = `r(se)' if region==`v'
+  6. }
+------ 11 -------
+(236 real changes made)
+(236 real changes made)
+------ 12 -------
+(468 real changes made)
+(468 real changes made)
+------ 13 -------
+(1217 real changes made)
+(1217 real changes made)
+------ 14 -------
+(1081 real changes made)
+(1081 real changes made)
+------ 15 -------
+(427 real changes made)
+(427 real changes made)
+------ 16 -------
+(940 real changes made)
+(940 real changes made)
+------ 17 -------
+(556 real changes made)
+(556 real changes made)
+------ 18 -------
+(270 real changes made)
+(270 real changes made)
+------ 19 -------
+(1337 real changes made)
+(1337 real changes made)
+------ 21 -------
+(4232 real changes made)
+(4232 real changes made)
+------ 22 -------
+(427 real changes made)
+(427 real changes made)
+------ 23 -------
+(2126 real changes made)
+(2126 real changes made)
+------ 31 -------
+(1421 real changes made)
+(1421 real changes made)
+------ 32 -------
+(1604 real changes made)
+(1604 real changes made)
+------ 33 -------
+(2226 real changes made)
+(2226 real changes made)
+------ 35 -------
+(1391 real changes made)
+(1391 real changes made)
+------ 36 -------
+(662 real changes made)
+(662 real changes made)
+------ 37 -------
+(282 real changes made)
+(282 real changes made)
+------ 41 -------
+(284 real changes made)
+(284 real changes made)
+------ 42 -------
+(200 real changes made)
+(200 real changes made)
+------ 43 -------
+(822 real changes made)
+(822 real changes made)
+------ 44 -------
+(79 real changes made)
+(79 real changes made)
+------ 45 -------
+(1907 real changes made)
+(1907 real changes made)
+------ 46 -------
+(586 real changes made)
+(586 real changes made)
+------ 47 -------
+(414 real changes made)
+(414 real changes made)
+------ 48 -------
+(1055 real changes made)
+(1055 real changes made)
+------ 49 -------
+(1266 real changes made)
+(1266 real changes made)
+------ 51 -------
+(348 real changes made)
+(348 real changes made)
+------ 52 -------
+(460 real changes made)
+(460 real changes made)
+------ 53 -------
+(301 real changes made)
+(301 real changes made)
+------ 54 -------
+(166 real changes made)
+(166 real changes made)
+------ 55 -------
+(236 real changes made)
+(236 real changes made)
+------ 56 -------
+(201 real changes made)
+(201 real changes made)
+------ 57 -------
+(41 real changes made)
+(41 real changes made)
+------ 58 -------
+(416 real changes made)
+(416 real changes made)
+------ 59 -------
+(230 real changes made)
+(230 real changes made)
+------ 71 -------
+(1863 real changes made)
+(1863 real changes made)
+------ 72 -------
+(1058 real changes made)
+(1058 real changes made)
+------ 73 -------
+(559 real changes made)
+(559 real changes made)
+------ 74 -------
+(436 real changes made)
+(436 real changes made)
+------ 81 -------
+(1084 real changes made)
+(1084 real changes made)
+------ 82 -------
+(569 real changes made)
+(569 real changes made)
+------ 83 -------
+(692 real changes made)
+(692 real changes made)
+------ 84 -------
+(525 real changes made)
+(525 real changes made)
+------ 85 -------
+(715 real changes made)
+(715 real changes made)
+------ 86 -------
+(979 real changes made)
+(979 real changes made)
+------ 87 -------
+(900 real changes made)
+(900 real changes made)
+------ 88 -------
+(920 real changes made)
+(920 real changes made)
+------ 89 -------
+(771 real changes made)
+(771 real changes made)
+------ 91 -------
+(399 real changes made)
+(399 real changes made)
+------ 92 -------
+(988 real changes made)
+(988 real changes made)
+------ 93 -------
+(731 real changes made)
+(731 real changes made)
+------ 94 -------
+(645 real changes made)
+(645 real changes made)
+------ 95 -------
+(701 real changes made)
+(701 real changes made)
+------ 96 -------
+(756 real changes made)
+(756 real changes made)
+------ 97 -------
+(821 real changes made)
+(821 real changes made)
+------ 98 -------
+(738 real changes made)
+(738 real changes made)
+------ 99 -------
+(1147 real changes made)
+(1147 real changes made)
+------ 101 -------
+(498 real changes made)
+(498 real changes made)
+------ 102 -------
+(259 real changes made)
+(259 real changes made)
+------ 103 -------
+(303 real changes made)
+(303 real changes made)
+------ 104 -------
+(1083 real changes made)
+(1083 real changes made)
+------ 105 -------
+(391 real changes made)
+(391 real changes made)
+------ 106 -------
+(424 real changes made)
+(424 real changes made)
+------ 107 -------
+(381 real changes made)
+(381 real changes made)
+------ 108 -------
+(830 real changes made)
+(830 real changes made)
+------ 121 -------
+(1483 real changes made)
+(1483 real changes made)
+------ 122 -------
+(556 real changes made)
+(556 real changes made)
+------ 123 -------
+(1245 real changes made)
+(1245 real changes made)
+------ 124 -------
+(962 real changes made)
+(962 real changes made)
+------ 125 -------
+(1240 real changes made)
+(1240 real changes made)
+------ 126 -------
+(654 real changes made)
+(654 real changes made)
+------ 127 -------
+(712 real changes made)
+(712 real changes made)
+------ 131 -------
+(2761 real changes made)
+(2761 real changes made)
+------ 132 -------
+(1407 real changes made)
+(1407 real changes made)
+------ 133 -------
+(3021 real changes made)
+(3021 real changes made)
+------ 134 -------
+(417 real changes made)
+(417 real changes made)
+------ 135 -------
+(289 real changes made)
+(289 real changes made)
+------ 141 -------
+(1342 real changes made)
+(1342 real changes made)
+------ 142 -------
+(1267 real changes made)
+(1267 real changes made)
+------ 143 -------
+(1079 real changes made)
+(1079 real changes made)
+------ 144 -------
+(684 real changes made)
+(684 real changes made)
+------ 145 -------
+(343 real changes made)
+(343 real changes made)
+------ 146 -------
+(464 real changes made)
+(464 real changes made)
+------ 147 -------
+(702 real changes made)
+(702 real changes made)
+------ 148 -------
+(1482 real changes made)
+(1482 real changes made)
+------ 410 -------
+(102 real changes made)
+(102 real changes made)
+------ 411 -------
+(673 real changes made)
+(673 real changes made)
+------ 412 -------
+(604 real changes made)
+(604 real changes made)
+------ 413 -------
+(519 real changes made)
+(519 real changes made)
+------ 414 -------
+(1072 real changes made)
+(1072 real changes made)
+------ 415 -------
+(652 real changes made)
+(652 real changes made)
+------ 416 -------
+(620 real changes made)
+(620 real changes made)
+------ 510 -------
+(192 real changes made)
+(192 real changes made)
+------ 511 -------
+(330 real changes made)
+(330 real changes made)
+------ 512 -------
+(218 real changes made)
+(218 real changes made)
+------ 513 -------
+(589 real changes made)
+(589 real changes made)
+------ 514 -------
+(196 real changes made)
+(196 real changes made)
+------ 515 -------
+(432 real changes made)
+(432 real changes made)
+------ 611 -------
+(808 real changes made)
+(808 real changes made)
+------ 612 -------
+(211 real changes made)
+(211 real changes made)
+------ 613 -------
+(90 real changes made)
+(90 real changes made)
+------ 621 -------
+(364 real changes made)
+(364 real changes made)
+------ 622 -------
+(103 real changes made)
+(103 real changes made)
+------ 623 -------
+(44 real changes made)
+(44 real changes made)
+------ 624 -------
+(194 real changes made)
+(194 real changes made)
+------ 630 -------
+(931 real changes made)
+(931 real changes made)
+------ 641 -------
+(462 real changes made)
+(462 real changes made)
+------ 642 -------
+(316 real changes made)
+(316 real changes made)
+------ 643 -------
+(176 real changes made)
+(176 real changes made)
+------ 651 -------
+(1235 real changes made)
+(1235 real changes made)
+------ 652 -------
+(670 real changes made)
+(670 real changes made)
+------ 661 -------
+(1265 real changes made)
+(1265 real changes made)
+------ 662 -------
+(212 real changes made)
+(212 real changes made)
+------ 910 -------
+(496 real changes made)
+(496 real changes made)
+------ 911 -------
+(724 real changes made)
+(724 real changes made)
+------ 912 -------
+(266 real changes made)
+(266 real changes made)
+------ 1111 -------
+(281 real changes made)
+(281 real changes made)
+------ 1112 -------
+(347 real changes made)
+(347 real changes made)
+------ 1113 -------
+(237 real changes made)
+(237 real changes made)
+------ 1121 -------
+(573 real changes made)
+(573 real changes made)
+------ 1122 -------
+(925 real changes made)
+(925 real changes made)
+------ 1123 -------
+(169 real changes made)
+(169 real changes made)
+------ 1131 -------
+(568 real changes made)
+(568 real changes made)
+------ 1132 -------
+(1206 real changes made)
+(1206 real changes made)
+------ 1133 -------
+(1566 real changes made)
+(1566 real changes made)
+------ 1134 -------
+(206 real changes made)
+(206 real changes made)
+------ 1141 -------
+(1083 real changes made)
+(1083 real changes made)
+------ 1142 -------
+(564 real changes made)
+(564 real changes made)
+
+. 
+. collapse Rgini RginiSE RginiN, by(region)
+
+. 
+. 
+. save RegionalGini, replace
+file RegionalGini.dta saved
+
+. 
+. * Clean up temp files
+. rm "_temp1.dta"
+
+. rm "_temp2.dta"
+
+. rm "_temp3.dta"
+
+. rm "_temp4.dta"
+
+. rm "_temp5.dta"
+
+. 
+. 
+. 
+end of do-file

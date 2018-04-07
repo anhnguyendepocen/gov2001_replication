@@ -1,0 +1,92 @@
+
+R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R> # Step 3 of 6
+R> # Multivariate normal imputation of missing data
+R> 
+R> 
+R> set.seed(123453)
+R> 
+R> # Required libraries
+R> library(foreign)
+R> library(Amelia)
+Loading required package: Rcpp
+## 
+## Amelia II: Multiple Imputation
+## (Version 1.7.3, built: 2014-11-14)
+## Copyright (C) 2005-2015 James Honaker, Gary King and Matthew Blackwell
+## Refer to http://gking.harvard.edu/amelia/ for more information
+## 
+R> 
+R> # Read data
+R> dat <- read.dta("working.dta", convert.factors=FALSE)
+R> 
+R> 
+R> # set sensible bounds for income
+R> # upper bound is max obsered income times 5
+R> bounds <- matrix(NA, nrow=1, ncol=3)
+R> bounds[1,1] <- which(colnames(dat)=="income_ppp2005")
+R> bounds[1,2] <- 0
+R> bounds[1,3] <- max(dat$income_ppp2005, na.rm=TRUE)*5
+R> 
+R> # MVN imputation, using amelia
+R> # Cross-section is countrues
+R> # Time dimension is survey year
+R> imps <- amelia(dat, cs="cntry", ts="year", 
++     idvars=c("cntryyear","idno","regionat", "regionbe", "regionch",
++         "regionde", "regiondk", "regiones", "regionfr", "regiongb",
++         "regionie", "regionnl", "regionno", "regionpt", "regionse",
++         "regioach", "regioafi", "regioaes", "regioapt", "iscoco",
++         "nacer1"), 
++ 	ords=c("rincd", "fear", "equalop"), 
++     noms=c("esec","transfer","denom"),
++     polytime=2, bounds=bounds)
+-- Imputation 1 --
+
+  1  2  3  4  5
+
+-- Imputation 2 --
+
+  1  2  3  4  5
+
+-- Imputation 3 --
+
+  1  2  3  4  5
+
+-- Imputation 4 --
+
+  1  2  3  4  5  6
+
+-- Imputation 5 --
+
+  1  2  3  4  5  6
+
+R> 
+R> # compare densities of imputed income and rincd
+R> compare.density(imps, var="income_ppp2005")
+R> compare.density(imps, var="rincd")
+R> 	
+R> 
+R> # save imputed data set
+R> save(imps, file="3__imputeMVN.Rdata")
+R> 	
+R> 
+> proc.time()
+   user  system elapsed 
+ 62.979   3.753  66.723 

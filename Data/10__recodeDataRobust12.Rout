@@ -1,0 +1,729 @@
+
+R version 3.2.0 Patched (2015-05-04 r68320) -- "Full of Ingredients"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R> # Step 2 of 6
+R> # merge combined ESS data file with regional data,
+R> # harmonize names of Eurostat NUTS regions. Prepares dataset
+R> # used for multiple imputation.
+R> 
+R> 
+R> # Required libraries
+R> library(foreign)
+R> library(car)
+R> 
+R> working <- read.dta("working.dta", convert.factors=FALSE)
+R> 
+R> 
+R> 
+R> # =========================================================
+R> # =  function for recoding region and numeric country var =
+R> # =========================================================
+R> 
+R> # creates a numeric region ID variable, harmonized over
+R> # different ESS waves
+R> 
+R> 
+R> region <- function(data) {
++ 
++ cntryn <- car::recode(data$cntry, "'AT'=1; 'BE'=2; 'CH'=3; 'DE'=4; 'DK'=5; 'ES'=6; 'FI'=7;  'FR'=8; 'GB'=9; 'IE'=10; 'NL'=11; 'NO'=12; 'PT'=13; 'SE'=14; else=NA")
++ 
++ regionat <- data$regionat
++ regionbe <- data$regionbe
++ regionch <- data$regionch
++ regioach <- data$regioach
++ regionde <- data$regionde
++ regiondk <- data$regiondk
++ regiones <- data$regiones
++ regioaes <- data$regioaes
++ regioafi <- data$regioafi
++ regionfr <- data$regionfr
++ regiongb <- data$regiongb
++ regionie <- data$regionie
++ regioaie <- data$regioaie
++ regionnl <- data$regionnl
++ regionno <- data$regionno
++ regionse <- data$regionse
++ regionpt <- data$regionpt
++ regioapt <- data$regioapt
++ 
++ region <- rep(-999, dim(data)[1])
++ 
++ 
++ #  Austria 1
++ 
++ # regionat -- Region, Austria
++ # ------------------------------------------------------------------------
++ #                            |      Freq.    Percent      Valid       Cum.
++ # ---------------------------+--------------------------------------------
++ # Valid   1 Burgenland       |        247       0.24       3.63       3.63
++ #         2 K‰rnten          |        490       0.48       7.20      10.83
++ #         3 Niederˆsterreich |       1267       1.24      18.62      29.44
++ #         4 Oberˆsterreich   |       1115       1.09      16.38      45.83
++ #         5 Salzburg         |        457       0.45       6.71      52.54
++ #         6 Steiermark       |        995       0.98      14.62      67.16
++ #         7 Tirol            |        590       0.58       8.67      75.83
++ #         8 Vorarlberg       |        281       0.28       4.13      79.96
++ #         9 Wien             |       1364       1.34      20.04     100.00
++ #         Total              |       6806       6.68     100.00
++ # Missing .                  |      95030      93.32
++ # Total                      |     101836     100.00
++ # ------------------------------------------------------------------------
++ 
++ region[regionat==1] <- 11
++ region[regionat==2] <- 12
++ region[regionat==3] <- 13
++ region[regionat==4] <- 14
++ region[regionat==5] <- 15
++ region[regionat==6] <- 16
++ region[regionat==7] <- 17
++ region[regionat==8] <- 18
++ region[regionat==9] <- 19
++ 
++ 
++ 
++ # Belgium 2
++ 
++ # regionbe -- Region, Belgium
++ # -----------------------------------------------------------------------
++ #                           |      Freq.    Percent      Valid       Cum.
++ # --------------------------+--------------------------------------------
++ # Valid   1 Flemish region  |       4394       4.31      61.82      61.82
++ #         2 Brussels region |        456       0.45       6.42      68.23
++ #         3 Walloon region  |       2258       2.22      31.77     100.00
++ #         Total             |       7108       6.98     100.00
++ # Missing .                 |      94728      93.02
++ # Total                     |     101836     100.00
++ # -----------------------------------------------------------------------
++ 
++ region[regionbe==1] <- 21
++ region[regionbe==2] <- 22
++ region[regionbe==3] <- 23
++ 
++ 
++ # Switzerland 3
++ # regionch uses 'nordschweiz' , so it defines the coarse scheme...
++  # 31 RÈgion lÈmanique
++  # 32 Espace Mittelland
++  # 33 Nordschweiz (Nordswestchweiz + Zurich)
++  # 35 Ostschweiz
++  # 36 Zentralschweiz
++  # 37 Ticino
++ 
++ region[regionch==1] <- 31
++ region[regionch==2] <- 32
++ region[regionch==3] <- 33
++ region[regionch==4] <- 36
++ region[regionch==5] <- 35
++ region[regionch==6] <- 37
++ 
++ region[regioach==1] <- 31
++ region[regioach==2] <- 32
++ region[regioach==3] <- 33
++ region[regioach==4] <- 33
++ region[regioach==5] <- 35
++ region[regioach==6] <- 36
++ region[regioach==7] <- 37
++ 
++ 
++ 
++ # germany 4
++ 
++ # regionde -- Region, Germany
++ # -------------------------------------------------------------------------------
++ #                                   |      Freq.    Percent      Valid       Cum.
++ # ----------------------------------+--------------------------------------------
++ # Valid   1  Schleswig-Holstein     |        292       0.29       2.57       2.57
++ #         2  Hamburg                |        207       0.20       1.82       4.39
++ #         3  Niedersachsen          |        847       0.83       7.46      11.85
++ #         4  Bremen                 |         81       0.08       0.71      12.56
++ #         5  Nordrhein-Westfalen    |       2010       1.97      17.70      30.26
++ #         6  Hessen                 |        604       0.59       5.32      35.58
++ #         7  Rheinland-Pfalz        |        437       0.43       3.85      39.43
++ #         8  Baden-W¸rttemberg      |       1106       1.09       9.74      49.17
++ #         9  Bayern                 |       1346       1.32      11.85      61.02
++ #         10 Saarland               |        106       0.10       0.93      61.95
++ #         11 Berlin                 |        693       0.68       6.10      68.05
++ #         12 Brandenburg            |        640       0.63       5.64      73.69
++ #         13 Mecklenburg-Vorpommern |        530       0.52       4.67      78.36
++ #         14 Sachsen                |       1118       1.10       9.84      88.20
++ #         15 Sachsen-Anhalt         |        687       0.67       6.05      94.25
++ #         16 Th¸ringen              |        653       0.64       5.75     100.00
++ #         Total                     |      11357      11.15     100.00
++ # Missing .                         |      90479      88.85
++ # Total                             |     101836     100.00
++ # -------------------------------------------------------------------------------
++ 
++ region[regionde==1] <- 41
++ region[regionde==2] <- 42
++ region[regionde==3] <- 43
++ region[regionde==4] <- 44
++ region[regionde==5] <- 45
++ region[regionde==6] <- 46
++ region[regionde==7] <- 47
++ region[regionde==8] <- 48
++ region[regionde==9] <- 49
++ region[regionde==10] <- 410
++ region[regionde==11] <- 411
++ region[regionde==12] <- 412
++ region[regionde==13] <- 413
++ region[regionde==14] <- 414
++ region[regionde==15] <- 415
++ region[regionde==16] <- 416
++ 
++ 
++ # Denmark 5
++ 
++ # regiondk -- Region, Denmark
++ # -------------------------------------------------------------------------------------
++ #                                                |      Freq.    Percent      Valid
++ # -----------------------------------------------+-------------------------------------
++ # Valid   1  K¯benhavns og Frederiksberg Kommune |        352       0.35       7.86
++ #         2  K¯benhavns Amt                      |        468       0.46      10.44
++ #         3  Frederiksborg Amt                   |        312       0.31       6.96
++ #         4  Roskilde Amt                        |        174       0.17       3.88
++ #         5  VestsjÊllands Amt                   |        246       0.24       5.49
++ #         6  Storstr¯ms Amt                      |        205       0.20       4.57
++ #         7  Bornholms Amt                       |         41       0.04       0.91
++ #         8  Fyns Amt                            |        426       0.42       9.51
++ #         9  S¯nderjyllands Amt                  |        242       0.24       5.40
++ #         10 Ribe Amt                            |        199       0.20       4.44
++ #         11 Vejle Amt                           |        337       0.33       7.52
++ #         12 Ringk¯bing Amt                      |        225       0.22       5.02
++ #         13 ≈rhus Amt                           |        608       0.60      13.57
++ #         14 Viborg Amt                          |        199       0.20       4.44
++ #         15 Nordjyllands Amt                    |        447       0.44       9.98
++ #         Total                                  |       4481       4.40     100.00
++ # Missing .                                      |      97355      95.60
++ # Total                                          |     101836     100.00
++ # -------------------------------------------------------------------------------------
++ 
++ region[regiondk==1] <- 51
++ region[regiondk==2] <- 52
++ region[regiondk==3] <- 53
++ region[regiondk==4] <- 54
++ region[regiondk==5] <- 55
++ region[regiondk==6] <- 56
++ region[regiondk==7] <- 57
++ region[regiondk==8] <- 58
++ region[regiondk==9] <- 59
++ region[regiondk==10] <- 510
++ region[regiondk==11] <- 511
++ region[regiondk==12] <- 512
++ region[regiondk==13] <- 513
++ region[regiondk==14] <- 514
++ region[regiondk==15] <- 515
++ 
++ 
++ # Spain 6
++ 
++ # regiones -- Region, Spain
++ # -----------------------------------------------------------------------------------
++ #                                       |      Freq.    Percent      Valid       Cum.
++ # --------------------------------------+--------------------------------------------
++ # Valid   11 Galicia                    |        212       0.21       6.29       6.29
++ #         12 Principado de Asturias     |        105       0.10       3.12       9.41
++ #         13 Cantabria                  |         45       0.04       1.34      10.75
++ #         21 PaÌs Vasco                 |        154       0.15       4.57      15.32
++ #         22 Comunidad Foral de Navarra |         55       0.05       1.63      16.95
++ #         23 La Rioja                   |         23       0.02       0.68      17.64
++ #         24 AragÛn                     |         95       0.09       2.82      20.46
++ #         30 Comunidad de Madrid        |        450       0.44      13.36      33.82
++ #         41 Castilla y LeÛn            |        246       0.24       7.30      41.12
++ #         42 Castilla-la Mancha         |        167       0.16       4.96      46.08
++ #         43 Extremadura                |         92       0.09       2.73      48.81
++ #         51 CataluÒa                   |        481       0.47      14.28      63.09
++ #         52 Comunidad Valenciana       |        326       0.32       9.68      72.77
++ #         53 Illes Balears              |         83       0.08       2.46      75.24
++ #         61 AndalucÌa                  |        598       0.59      17.76      92.99
++ #         62 RegiÛn de Murcia           |        100       0.10       2.97      95.96
++ #         63 Ceuta y Melilla            |         10       0.01       0.30      96.26
++ #         70 Canarias                   |        126       0.12       3.74     100.00
++ #         Total                         |       3368       3.31     100.00
++ # Missing .                             |      98468      96.69
++ # Total                                 |     101836     100.00
++ # -----------------------------------------------------------------------------------
++ #
++ # regioaes -- Region, Spain
++ # -----------------------------------------------------------------------------------
++ #                                       |      Freq.    Percent      Valid       Cum.
++ # --------------------------------------+--------------------------------------------
++ # Valid   11 Galicia                    |        613       0.60      13.83      13.83
++ #         12 Principado de Asturias     |        113       0.11       2.55      16.38
++ #         13 Cantabria                  |         48       0.05       1.08      17.46
++ #         21 PaÌs Vasco                 |        229       0.22       5.17      22.63
++ #         22 Comunidad Foral de Navarra |         50       0.05       1.13      23.76
++ #         23 La Rioja                   |         22       0.02       0.50      24.26
++ #         24 AragÛn                     |        105       0.10       2.37      26.62
++ #         30 Comunidad de Madrid        |        515       0.51      11.62      38.24
++ #         41 Castilla y LeÛn            |        230       0.23       5.19      43.43
++ #         42 Castilla-La Mancha         |        158       0.16       3.56      47.00
++ #         43 Extremadura                |         99       0.10       2.23      49.23
++ #         51 CataluÒa                   |        797       0.78      17.98      67.22
++ #         52 Comunidad Valenciana       |        362       0.36       8.17      75.38
++ #         53 Illes Balears              |         81       0.08       1.83      77.21
++ #         61 AndalucÌa                  |        724       0.71      16.34      93.55
++ #         62 RegiÛn de Murcia           |        122       0.12       2.75      96.30
++ #         63 Ciudad AutÛnoma de Ceuta   |          4       0.00       0.09      96.39
++ #         64 Ciudad AutÛnoma de Melilla |          5       0.00       0.11      96.50
++ #         70 Canarias                   |        155       0.15       3.50     100.00
++ #         Total                         |       4432       4.35     100.00
++ # Missing .                             |      97404      95.65
++ # Total                                 |     101836     100.00
++ # -----------------------------------------------------------------------------------
++ 
++ 
++ region[regiones==11] <- 611
++ region[regiones==12] <- 612
++ region[regiones==13] <- 613
++ region[regiones==21] <- 621
++ region[regiones==22] <- 622
++ region[regiones==23] <- 623
++ region[regiones==24] <- 624
++ region[regiones==30] <- 630
++ region[regiones==41] <- 641
++ region[regiones==42] <- 642
++ region[regiones==43] <- 643
++ region[regiones==51] <- 651
++ region[regiones==52] <- 652
++ region[regiones==53] <- 653
++ region[regiones==61] <- 661
++ region[regiones==62] <- 662
++ region[regiones==63] <- 663
++ region[regiones==70] <- 670
++ region[regioaes==11] <- 611
++ region[regioaes==12] <- 612
++ region[regioaes==13] <- 613
++ region[regioaes==21] <- 621
++ region[regioaes==22] <- 622
++ region[regioaes==23] <- 623
++ region[regioaes==24] <- 624
++ region[regioaes==30] <- 630
++ region[regioaes==41] <- 641
++ region[regioaes==42] <- 642
++ region[regioaes==43] <- 643
++ region[regioaes==51] <- 651
++ region[regioaes==52] <- 652
++ region[regioaes==53] <- 653
++ region[regioaes==61] <- 661
++ region[regioaes==62] <- 662
++ region[regioaes==63] <- 663
++ region[regioaes==64] <- 663
++ region[regioaes==70] <- 670
++ 
++ 
++ 
++ # Finland 7
++ 
++ # regioafi -- Region, Finland
++ # --------------------------------------------------------------------------------------
++ #                                                  |      Freq.    Percent      Valid
++ # -------------------------------------------------+------------------------------------
++ # Valid   1 Southern Finland(FI18) and ≈land(FI20) |       1920       1.89      47.52
++ #         2 Western Finland (FI19)                 |       1091       1.07      27.00
++ #         3 Eastern Finland (FI13)                 |        577       0.57      14.28
++ #         4 Northern Finland (FI1A)                |        452       0.44      11.19
++ #         Total                                    |       4040       3.97     100.00
++ # Missing .                                        |      97796      96.03
++ # Total                                            |     101836     100.00
++ # --------------------------------------------------------------------------------------
++ 
++ region[regioafi==1] <- 71
++ region[regioafi==2] <- 72
++ region[regioafi==3] <- 73
++ region[regioafi==4] <- 74
++ 
++ 
++ 
++ # France 8
++ 
++ # regionfr -- Region, France
++ # ----------------------------------------------------------------------
++ #                                 |      Freq.    Percent      Valid
++ # --------------------------------+-------------------------------------
++ # Valid   1 RÈgion parisienne     |       1101       1.08      15.06
++ #         2 Bassin Parisien Est   |        581       0.57       7.95
++ #         3 Bassin Parisien Ouest |        705       0.69       9.65
++ #         4 Nord                  |        540       0.53       7.39
++ #         5 Est                   |        727       0.71       9.95
++ #         6 Ouest                 |       1006       0.99      13.76
++ #         7 Sud Ouest             |        921       0.90      12.60
++ #         8 Sud Est               |        942       0.93      12.89
++ #         9 MÈditerranÈe          |        786       0.77      10.75
++ #         Total                   |       7309       7.18     100.00
++ # Missing .                       |      94527      92.82
++ # Total                           |     101836     100.00
++ # ----------------------------------------------------------------------
++ 
++ region[regionfr==1] <- 81
++ region[regionfr==2] <- 82
++ region[regionfr==3] <- 83
++ region[regionfr==4] <- 84
++ region[regionfr==5] <- 85
++ region[regionfr==6] <- 86
++ region[regionfr==7] <- 87
++ region[regionfr==8] <- 88
++ region[regionfr==9] <- 89
++ 
++ 
++ 
++ # Great Britain 9
++ 
++ # regiongb -- Region, United Kingdom
++ # ---------------------------------------------------------------------------------
++ #                                     |      Freq.    Percent      Valid       Cum.
++ # ------------------------------------+--------------------------------------------
++ # Valid   1  North East               |        405       0.40       4.69       4.69
++ #         2  North West               |       1024       1.01      11.87      16.56
++ #         3  Yorkshire and The Humber |        741       0.73       8.59      25.15
++ #         4  East Midlands            |        661       0.65       7.66      32.82
++ #         5  West Midlands            |        724       0.71       8.39      41.21
++ #         6  South West               |        781       0.77       9.05      50.26
++ #         7  East of England          |        835       0.82       9.68      59.94
++ #         8  London                   |        755       0.74       8.75      68.69
++ #         9  South East               |       1176       1.15      13.63      82.32
++ #         10 Wales                    |        508       0.50       5.89      88.21
++ #         11 Scotland                 |        742       0.73       8.60      96.81
++ #         12 Northern Ireland         |        275       0.27       3.19     100.00
++ #         Total                       |       8627       8.47     100.00
++ # Missing .                           |      93209      91.53
++ # Total                               |     101836     100.00
++ # ---------------------------------------------------------------------------------
++ 
++ region[regiongb==1] <- 91
++ region[regiongb==2] <- 92
++ region[regiongb==3] <- 93
++ region[regiongb==4] <- 94
++ region[regiongb==5] <- 95
++ region[regiongb==6] <- 96
++ region[regiongb==7] <- 97
++ region[regiongb==8] <- 98
++ region[regiongb==9] <- 99
++ region[regiongb==10] <- 910
++ region[regiongb==11] <- 911
++ region[regiongb==12] <- 912
++ region[regiongb==99] <- 99999
++ 
++ 
++ # Ireland 10
++ # coarse 3 cat coding (because of ESS3)
++ 	# 101 Dublin
++ 	# 102 Border, Midlands and West
++ 	# 103 Southern and Eastern, excl. Dublin
++ 
++ # 	regionie -- Region, Ireland
++ # ------------------------------------------------------------------
++ #                      |      Freq.    Percent      Valid       Cum.
++ # ---------------------+--------------------------------------------
++ # Valid   1 Border     |        512       0.50      11.97      11.97
++ #         2 Midland    |        273       0.27       6.38      18.35
++ #         3 West       |        315       0.31       7.36      25.71
++ #         4 Dublin     |       1109       1.09      25.92      51.64
++ #         5 Mid East   |        404       0.40       9.44      61.08
++ #         6 Mid West   |        432       0.42      10.10      71.18
++ #         7 South East |        387       0.38       9.05      80.22
++ #         8 South West |        846       0.83      19.78     100.00
++ #         Total        |       4278       4.20     100.00
++ # Missing .            |      97558      95.80
++ # Total                |     101836     100.00
++ # ------------------------------------------------------------------
++ 
++ 
++ region[regionie==1] <- 101
++ region[regionie==2] <- 102
++ region[regionie==3] <- 103
++ region[regionie==4] <- 104
++ region[regionie==5] <- 105
++ region[regionie==6] <- 106
++ region[regionie==7] <- 107
++ region[regionie==8] <- 108
++ 
++ 
++ 
++ # Netherlands 11
++ # recoded to coarse main units (2nd digit level)
++ 
++ # regionnl -- Region, Netherlands
++ # ---------------------------------------------------------------------------------------------
++ #                                                 |      Freq.    Percent      Valid       Cum.
++ # ------------------------------------------------+--------------------------------------------
++ # Valid   111 Oost-Groningen                      |         85       0.08       1.08       1.08
++ #         112 Delfzijl  en Omgeving               |         29       0.03       0.37       1.45
++ #         113 Overig Groningen                    |        168       0.16       2.14       3.59
++ #         121 Noord-Friesland                     |        181       0.18       2.30       5.89
++ #         122 Zuidwest-Friesland                  |         51       0.05       0.65       6.54
++ #         123 Zuidoost-Friesland                  |        120       0.12       1.53       8.06
++ #         131 Noord-Drenthe                       |         96       0.09       1.22       9.28
++ #         132 Zuidoost-Drenthe                    |         85       0.08       1.08      10.36
++ #         133 Zuidwest-Drenthe                    |         60       0.06       0.76      11.13
++ #         211 Noord-Ooverijssel                   |        176       0.17       2.24      13.36
++ #         212 Zuidwest-Overijssel                 |         77       0.08       0.98      14.34
++ #         213 Twente                              |        325       0.32       4.13      18.47
++ #         221 Veluwe                              |        278       0.27       3.53      22.01
++ #         222 Achterhoek                          |        209       0.21       2.66      24.67
++ #         223 Arnhem\Nijmegen                     |        346       0.34       4.40      29.07
++ #         224 Zuidwest-Gelderland                 |        120       0.12       1.53      30.59
++ #         230 Flevoland                           |        174       0.17       2.21      32.80
++ #         310 Utrecht                             |        575       0.56       7.31      40.11
++ #         321 Kop van Noord-Holland               |        197       0.19       2.50      42.62
++ #         322 Alkmaar en Omgeving                 |        122       0.12       1.55      44.17
++ #         323 Ijmond                              |         86       0.08       1.09      45.26
++ #         324 Agglomeratie Haarlem                |        102       0.10       1.30      46.56
++ #         325 Zaanstreek                          |         78       0.08       0.99      47.55
++ #         326 Groot-Amsterdam                     |        531       0.52       6.75      54.30
++ #         327 Het Gooi en Vechtstreek             |        117       0.11       1.49      55.79
++ #         331 Agglomeratie Leiden en Bollenstreek |        192       0.19       2.44      58.23
++ #         332 Agglomeratie  S-Gravenhage          |        329       0.32       4.18      62.42
++ #         333 Delft en Westland                   |        107       0.11       1.36      63.78
++ #         334 Oost-Zuid-Holland                   |        149       0.15       1.89      65.67
++ #         335 Groot-Rijnmond                      |        625       0.61       7.95      73.62
++ #         336 Zuidoost-Zuid-Holland               |        195       0.19       2.48      76.10
++ #         341 Zeeuwsch-Vlaanderen                 |         66       0.06       0.84      76.94
++ #         342 Overig Zeeland                      |        142       0.14       1.81      78.74
++ #         411 West-Noord-Brabant                  |        286       0.28       3.64      82.38
++ #         412 Midden-Noord-Brabant                |        224       0.22       2.85      85.23
++ #         413 Noordoost-Noord-Brabant             |        291       0.29       3.70      88.93
++ #         414 Zuidoost-Noord-Brabant              |        302       0.30       3.84      92.77
++ #         421 Noord-Limburg                       |        145       0.14       1.84      94.61
++ #         422 Midden-Limburg                      |        105       0.10       1.34      95.94
++ #         423 Zuid-Limburg                        |        319       0.31       4.06     100.00
++ #         Total                                   |       7865       7.72     100.00
++ # Missing .                                       |      93971      92.28
++ # Total                                           |     101836     100.00
++ # ---------------------------------------------------------------------------------------------
++ 
++ region[regionnl==111] <- 1111
++ region[regionnl==112] <- 1111
++ region[regionnl==113] <- 1111
++ region[regionnl==121] <- 1112
++ region[regionnl==122] <- 1112
++ region[regionnl==123] <- 1112
++ region[regionnl==131] <- 1113
++ region[regionnl==132] <- 1113
++ region[regionnl==133] <- 1113
++ region[regionnl==211] <- 1121
++ region[regionnl==212] <- 1121
++ region[regionnl==213] <- 1121
++ region[regionnl==221] <- 1122
++ region[regionnl==222] <- 1122
++ region[regionnl==223] <- 1122
++ region[regionnl==224] <- 1122
++ region[regionnl==230] <- 1123
++ region[regionnl==310] <- 1131
++ region[regionnl==321] <- 1132
++ region[regionnl==322] <- 1132
++ region[regionnl==323] <- 1132
++ region[regionnl==324] <- 1132
++ region[regionnl==325] <- 1132
++ region[regionnl==326] <- 1132
++ region[regionnl==327] <- 1132
++ region[regionnl==331] <- 1133
++ region[regionnl==332] <- 1133
++ region[regionnl==333] <- 1133
++ region[regionnl==334] <- 1133
++ region[regionnl==335] <- 1133
++ region[regionnl==336] <- 1133
++ region[regionnl==341] <- 1134
++ region[regionnl==342] <- 1134
++ region[regionnl==411] <- 1141
++ region[regionnl==412] <- 1141
++ region[regionnl==413] <- 1141
++ region[regionnl==414] <- 1141
++ region[regionnl==421] <- 1142
++ region[regionnl==422] <- 1142
++ region[regionnl==423] <- 1142
++ 
++ 
++ 
++ # Norway 12
++ 
++ # regionno -- Region, Norway
++ # ----------------------------------------------------------------------------
++ #                                |      Freq.    Percent      Valid       Cum.
++ # -------------------------------+--------------------------------------------
++ # Valid   1 Oslo and Akershus    |       1523       1.50      21.62      21.62
++ #         2 Hedmark and Oppland  |        568       0.56       8.06      29.68
++ #         3 South Eastern Norway |       1279       1.26      18.15      47.84
++ #         4 Agder and Rogaland   |        996       0.98      14.14      61.97
++ #         5 Western Norway       |       1279       1.26      18.15      80.13
++ #         6 Tr¯ndelag            |        667       0.65       9.47      89.60
++ #         7 Northern Norway      |        733       0.72      10.40     100.00
++ #         Total                  |       7045       6.92     100.00
++ # Missing .                      |      94791      93.08
++ # Total                          |     101836     100.00
++ # ----------------------------------------------------------------------------
++ 
++ region[regionno==1] <- 121
++ region[regionno==2] <- 122
++ region[regionno==3] <- 123
++ region[regionno==4] <- 124
++ region[regionno==5] <- 125
++ region[regionno==6] <- 126
++ region[regionno==7] <- 127
++ 
++ 
++ 
++ # Portugal 13
++ 
++ # regionpt -- Region, Portugal
++ # -----------------------------------------------------------------------------
++ #                                 |      Freq.    Percent      Valid       Cum.
++ # --------------------------------+--------------------------------------------
++ # Valid   1 Norte                 |       2031       1.99      35.49      35.49
++ #         2 Centro                |       1035       1.02      18.09      53.58
++ #         3 Lisboa e Vale do Tejo |       2132       2.09      37.26      90.84
++ #         4 Alentejo              |        311       0.31       5.44      96.28
++ #         5 Algarve               |        213       0.21       3.72     100.00
++ #         Total                   |       5722       5.62     100.00
++ # Missing .                       |      96114      94.38
++ # Total                           |     101836     100.00
++ # -----------------------------------------------------------------------------
++ #
++ # regioapt -- Region, Portugal
++ # ----------------------------------------------------------------
++ #                    |      Freq.    Percent      Valid       Cum.
++ # -------------------+--------------------------------------------
++ # Valid   1 North    |        779       0.76      33.33      33.33
++ #         2 Center   |        408       0.40      17.46      50.79
++ #         3 Lisbon   |        959       0.94      41.04      91.83
++ #         4 Alentejo |        113       0.11       4.84      96.66
++ #         5 Algarve  |         78       0.08       3.34     100.00
++ #         Total      |       2337       2.29     100.00
++ # Missing .          |      99499      97.71
++ # Total              |     101836     100.00
++ # ----------------------------------------------------------------
++ 
++ region[regionpt==1] <- 131
++ region[regionpt==2] <- 132
++ region[regionpt==3] <- 133
++ region[regionpt==4] <- 134
++ region[regionpt==5] <- 135
++ region[regioapt==1] <- 131
++ region[regioapt==2] <- 132
++ region[regioapt==3] <- 133
++ region[regioapt==4] <- 134
++ region[regioapt==5] <- 135
++ 
++ 
++ # Sweden 14
++ 
++ # regionse -- Region, Sweden
++ # ---------------------------------------------------------------------------
++ #                               |      Freq.    Percent      Valid       Cum.
++ # ------------------------------+--------------------------------------------
++ # Valid   1 Stockholm           |       1385       1.36      18.21      18.21
++ #         2 ÷stra Mellansverige |       1309       1.29      17.21      35.42
++ #         3 Sydsverige          |       1113       1.09      14.63      50.05
++ #         4 Norra Mellansverige |        706       0.69       9.28      59.33
++ #         5 Mellemsta Norrland  |        358       0.35       4.71      64.04
++ #         6 ÷vre Norrland       |        475       0.47       6.25      70.29
++ #         7 SmÂland och ÷arna   |        725       0.71       9.53      79.82
++ #         8 V‰stsverige         |       1535       1.51      20.18     100.00
++ #         Total                 |       7606       7.47     100.00
++ # Missing .                     |      94230      92.53
++ # Total                         |     101836     100.00
++ # ---------------------------------------------------------------------------
++ 
++ region[regionse==1] <- 141
++ region[regionse==2] <- 142
++ region[regionse==3] <- 143
++ region[regionse==4] <- 144
++ region[regionse==5] <- 145
++ region[regionse==6] <- 146
++ region[regionse==7] <- 147
++ region[regionse==8] <- 148
++ 
++ # RETURN obj
++ return(cbind(data, region, cntryn))
++ }
+R> 
+R> 
+R> # ===========================================
+R> # =  function for recoding of covariates    =
+R> # ===========================================
+R> 
+R> recode.micro <- function(dat){
++ 
++ # 	remove region dummies
++ dat <- subset(dat, select=-c(regionat, regionbe, regionch, regionde, regiondk, regiones, regionfr, regiongb, regionie, regionnl, regionno, regionpt, regionse, regioach, regioafi, regioaes, regioapt))
++ 
++ # remove spanish isles (unconnected on map, too small)
++ dat <- subset(dat, subset=dat$region!=653&dat$region!=663&dat$region!=670)
++ 
++ # transfer classes
++ dat$transue <- ifelse(dat$transfer==2, 1, 0)
++ dat$transre <- ifelse(dat$transfer==3, 1, 0)
++ dat$transnlf <- ifelse(dat$transfer==4, 1, 0)
++ dat$transfer <- NULL
++ 
++ # social class (5 cat scheme)
++ dat$mngr <- ifelse((dat$esec==1|dat$esec==2) ,1, 0)
++ dat$lowsup <- ifelse((dat$esec==3|dat$esec==6) ,1, 0)
++ dat$smempl <- ifelse(dat$esec==4, 1, 0)
++ dat$whcol <- ifelse(dat$esec==7, 1, 0)
++ dat$blcol <- ifelse((dat$esec==8|dat$esec==9) ,1, 0)
++ dat$noclass <- ifelse((dat$esec==99) ,1, 0)
++ dat$esec <- NULL
++ 
++ ## income mean by cntryyear
++ mean_inc <- aggregate(dat$income_ppp2005, list(dat$cntryyear), mean, na.rm=TRUE)
++ colnames(mean_inc) <- c("cntryyear", "mean_income")
++ dat <- merge(dat, mean_inc, by="cntryyear")
++ dat$incdist <- dat$income_ppp2005 - dat$mean_income
++ 
++ ## ISCO codes and industry
++ ## Fleckenstein Seelaib-kaiser CPS 2012. 1 high gen., 2 low gen., 3 specific
++ dat$skills3 <- car::recode(dat$iscoco, "1000:3492=1; 4000:5230=2; 9000:9330=2;
++                                         6000:8400=3; 66666:99999=9; 100=9")
++ dat$skillshg <- ifelse(dat$skills3==1, 1, 0)
++ dat$skillslg <- ifelse(dat$skills3==2, 1, 0)
++ dat$skillssp <- ifelse(dat$skills3==3, 1, 0)
++   
++ return(dat)
++ }
+R> 
+R> 
+R> 
+R> 
+R> # ===============================
+R> # = Run recodes................ =
+R> # ===============================
+R> 
+R> dat <- region(working)
+R> dat <- recode.micro(dat)
+R> 
+R> 
+R> # ==================
+R> # = add macro data =
+R> # ==================
+R> 
+R> regio <- read.delim("RegionalData.csv", sep = ",", header=TRUE)
+R> regio$cntry <- NULL; regio$nutsid <- NULL
+R> dim(dat)
+[1] 96682    45
+R> dat <- merge(x=dat, y=regio, by="region", all=TRUE)
+R> dim(dat)
+[1] 96682    51
+R> 
+R> write.dta(dat, file="DataRobust12.dta")
+R> 
+R> system("rm working.dta")
+R> 
+> proc.time()
+   user  system elapsed 
+  4.884   0.344   5.235 

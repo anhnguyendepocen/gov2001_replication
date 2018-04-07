@@ -1,0 +1,105 @@
+
+running /Users/dstegmue/Library/Application Support/Stata/ado/personal/profile.
+> do ...
+ 
+To start PanelWhiz: Stata | User | PanelWhiz | Start 
+ 
+unrecognized command:  window
+r(199);
+
+
+. /* 
+> Step 6 of 6
+> combine 5 imputed data sets from
+> step 4 and merge regional gini from step 5.
+> */
+. 
+. 
+. * Load non-imputed dta
+. use data_listwise
+(Written by R.              )
+
+. * Load 5 imputed data sets
+. mi import flongsep data_imputed, using (data_imp{1-5}) id(idno)
+
+. * Convert to long form
+. * Imputations will be identified by _mi_m == 1 ... 5
+. * Original, non-imputed data is _mi_m==0
+. mi convert flong
+
+. compress
+  year was long now int
+  age was long now int
+  female was long now byte
+  lmtctr was long now byte
+  nacer1 was long now byte
+  children was long now byte
+  divorce was long now byte
+  objectid was long now int
+  _mi_m was int now byte
+  region was double now int
+  rincd was double now byte
+  fear was double now byte
+  equalop was double now byte
+  denom was double now byte
+  idno was double now long
+  cntryn was double now byte
+  transue was double now byte
+  transre was double now byte
+  transnlf was double now byte
+  mngr was double now byte
+  lowsup was double now byte
+  smempl was double now byte
+  whcol was double now byte
+  blcol was double now byte
+  noclass was double now byte
+  skills3 was double now byte
+  skillshg was double now byte
+  skillslg was double now byte
+  skillssp was double now byte
+  (91,654,536 bytes saved)
+
+. 
+. * Add Gini
+. merge m:1 region using RegionalGini
+(note: variable region was int, now double to accommodate using data's
+       values)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                           580,092  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. 
+. saveold "data_imputed.dta", replace
+file data_imputed.dta saved
+
+. 
+. * Remove intermediate data
+. rm data_imp1.dta
+
+. rm data_imp2.dta
+
+. rm data_imp3.dta
+
+. rm data_imp4.dta
+
+. rm data_imp5.dta
+
+. rm _1_data_imputed.dta
+
+. rm _2_data_imputed.dta
+
+. rm _3_data_imputed.dta
+
+. rm _4_data_imputed.dta
+
+. rm _5_data_imputed.dta
+
+. rm "working.dta"
+
+. 
+end of do-file

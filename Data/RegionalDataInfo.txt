@@ -1,0 +1,16 @@
+
+All data downloaded from Eurostat's Regio database.
+
+
+Eurostat data:
+Ruerate     Unemployment rate (years 15 and older) 
+Rpopdens    Population density  N/sq km 
+Rforeign    share of foreign population (non-citizens)     
+Rtech       Regional high tech specialization
+
+ID variables:
+cntry       Country code
+region      Region ID (used to match to main file)
+objectid    ID number used in map
+nutsid      Eurostat's NUTS region ID
+
