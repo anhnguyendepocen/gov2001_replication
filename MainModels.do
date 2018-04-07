@@ -21,7 +21,7 @@
 
 set more off
 
-set seed 63521
+set seed 02143
 
 
 * Load Data
