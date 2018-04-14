@@ -511,7 +511,7 @@ egen cntryn = group(cntry)
 compress
 sort cntry year idno
 
-keep cntry cntryyear rincd age female eduyrs lmtctr transfer uempl3 income_ppp2005 esec lright children divorce stflife health hhmmb domicil hincfel regionat regionbe regionch regionde regiondk regiones regionfr regiongb regionie regionnl regionno regionpt regionse regioach regioafi regioaes regioapt year weight iscoco nacer1 fear equalop victim denom attend hincsrc 
+keep cntry cntryyear rincd age female eduyrs lmtctr transfer uempl3 income_ppp2005 esec lright children divorce stflife health hhmmb domicil hincfel regionat regionbe regionch regionde regiondk regiones regionfr regiongb regionie regionnl regionno regionpt regionse regioach regioafi regioaes regioapt year weight iscoco nacer1 fear equalop victim denom attend hincsrc imbgeco imueclt imwbcnt
 
 gen idno = _n
 
