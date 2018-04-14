@@ -7,10 +7,10 @@ set.seed(123453)
 # Required libraries
 library(foreign)
 library(Amelia)
-library(haven)
+library(readstata13)
 
 # Read data
-dat <- read_dta("working.dta")
+dat <- read.dta13("working.dta", convert.factors=FALSE)
 
 
 # set sensible bounds for income
@@ -23,13 +23,14 @@ bounds[1,3] <- max(dat$income_ppp2005, na.rm=TRUE)*5
 # MVN imputation, using amelia
 # Cross-section is countrues
 # Time dimension is survey year
+
 imps <- amelia(dat, cs="cntry", ts="year", 
     idvars=c("cntryyear","idno","regionat", "regionbe", "regionch",
         "regionde", "regiondk", "regiones", "regionfr", "regiongb",
         "regionie", "regionnl", "regionno", "regionpt", "regionse",
         "regioach", "regioafi", "regioaes", "regioapt", "iscoco",
         "nacer1"), 
-	ords=c("rincd", "fear", "equalop"), 
+	ords=c("rincd", "fear", "equalop", "imbgeco", "imueclt", "imwbcnt"), 
     noms=c("esec","transfer","denom"),
     polytime=2, bounds=bounds)
 
