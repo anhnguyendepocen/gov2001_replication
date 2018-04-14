@@ -7,8 +7,9 @@
 # Required libraries
 library(foreign)
 library(car)
+library(readstata13)
 
-working <- read.dta("working.dta", convert.factors=FALSE)
+working <- read.dta13("working.dta", convert.factors=FALSE)
 
 
 
