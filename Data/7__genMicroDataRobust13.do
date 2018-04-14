@@ -45,7 +45,7 @@ replace hinctnt = hinctnie if cntry == "IE"
 
 recode hincsrc (77/99=.)
 
-keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm occm14ie regionat regionbe regionch regionde regiondk regiones regionfi regionfr regiongb regionie  regionnl regionno regionpt regionse dweight pweight dvrcdev chldhm stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc
+keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm occm14ie regionat regionbe regionch regionde regiondk regiones regionfi regionfr regiongb regionie  regionnl regionno regionpt regionse dweight pweight dvrcdev chldhm stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc imbgeco imueclt imwbcnt
 
 gen year = 2002
 
@@ -70,7 +70,7 @@ replace rlgdnm = rlgdnmfi if cntry == "FI"
 recode hincsrca (1=1) (2 3 =2) (4=3) (5=4) (6=5) (7=6) (8=7) (77/99=.), gen(hincsrc)
 
 ren nacer11 nacer1 
-keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm regionat regionbe regioach regionde regiondk regiones regioafi regionfr regiongb regionie regionnl regionno regionpt regionse dweight pweight dvrcdev chldhm stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc
+keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm regionat regionbe regioach regionde regiondk regiones regioafi regionfr regiongb regionie regionnl regionno regionpt regionse dweight pweight dvrcdev chldhm stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc imbgeco imueclt imwbcnt
 
 gen year = 2004
 
@@ -87,7 +87,7 @@ ren nacer11 nacer1
 
 recode hincsrca (1=1) (2 3 =2) (4=3) (5=4) (6=5) (7=6) (8=7) (77/99=.), gen(hincsrc)
 
-keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm regionat regionbe regioach regionde regiondk regioaes regioafi regionfr regiongb regioaie regionnl regionno regionpt regionse dweight pweight dvrcdev chldhm stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc
+keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm regionat regionbe regioach regionde regiondk regioaes regioafi regionfr regiongb regioaie regionnl regionno regionpt regionse dweight pweight dvrcdev chldhm stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc imbgeco imueclt imwbcnt
 
 gen year = 2006
 
@@ -104,7 +104,7 @@ ren nacer11 nacer1
 
 recode hincsrca (1=1) (2 3 =2) (4=3) (5=4) (6=5) (7=6) (8=7) (77/99=.), gen(hincsrc)
 
-keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm regionbe regioach regionde regioadk regioaes regioafi regionfr regiongb regionnl regionno regioapt regionse dweight pweight dvrcdev chldhm  stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc
+keep essround idno cntry lrscale gincdif happy ctzcntr brncntr hhmmb yrbrn gndr domicil edulvl eduyrs emplrel emplno jbspv njbspv mnactic wrkctr  iscoco nacer1 hinctnt hincfel uemp3m edulvlf emprf14 emplnof jbspvf edulvlm emprm14 emplnom jbspvm regionbe regioach regionde regioadk regioaes regioafi regionfr regiongb regionnl regionno regioapt regionse dweight pweight dvrcdev chldhm  stflife health aesfdrk ipeqopt crmvct rlgdnm rlgatnd hincsrc imbgeco imueclt imwbcnt
 
 gen year = 2008
 
@@ -464,6 +464,14 @@ gen weight = dweight*pweight
 
 
 
+* ===================
+* = Immigration     =
+* ===================
+* Recoding Refusal/Don't know/No answer as missing
+recode imbgeco (77/99=.)
+recode imueclt (77/99=.)
+recode imwbcnt (77/99=.)
+
 * =================================================================
 * = remove some cases............................................ =
 * =================================================================
@@ -482,7 +490,7 @@ drop if cntryyear=="FI2"
 
 * drop missing age (will not be used in listw. analyses, nor do we impute it)
 count
-dropmiss age, obs any force
+missings dropobs age, force
 count
 
 
@@ -494,7 +502,7 @@ egen cntryn = group(cntry)
 compress
 sort cntry year idno
 
-keep cntry cntryyear rincd age female eduyrs lmtctr transfer uempl3 natincome2005 esec lright children divorce stflife health hhmmb domicil hincfel regionat regionbe regionch regionde regiondk regiones regionfr regiongb regionie regionnl regionno regionpt regionse regioach regioafi regioaes regioapt year weight iscoco nacer1 fear equalop victim denom attend hincsrc 
+keep cntry cntryyear rincd age female eduyrs lmtctr transfer uempl3 natincome2005 esec lright children divorce stflife health hhmmb domicil hincfel regionat regionbe regionch regionde regiondk regiones regionfr regiongb regionie regionnl regionno regionpt regionse regioach regioafi regioaes regioapt year weight iscoco nacer1 fear equalop victim denom attend hincsrc  imbgeco imueclt imwbcnt
 
 gen idno = _n
 
