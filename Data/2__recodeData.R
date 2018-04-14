@@ -7,8 +7,10 @@
 # Required libraries
 library(foreign)
 library(car)
+library(haven)
 
-working <- read.dta("working.dta", convert.factors=FALSE)
+setwd('~/Documents/large_proj_data/gov2001_replication/Data')
+working <- read_dta("working.dta")
 
 
 
