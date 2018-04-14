@@ -7,9 +7,10 @@ set.seed(123453)
 # Required libraries
 library(foreign)
 library(Amelia)
+library(haven)
 
 # Read data
-dat <- read.dta("working.dta", convert.factors=FALSE)
+dat <- read_dta("working.dta")
 
 
 # set sensible bounds for income
